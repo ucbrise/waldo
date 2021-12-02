@@ -1,0 +1,57 @@
+{
+  "client_ips": [
+    "3.135.16.194"
+  ], 
+  "exp_sec": 60, 
+  "experiment_dir": "/results/range_malicious_throughput/2021:07:21:00:37/", 
+  "experiment_name": "range_malicious_throughput", 
+  "git_origin": "edauterman/dorydb.git", 
+  "github_key": "~/.ssh/id_ed25519", 
+  "github_pub_key": "~/.ssh/id_ed25519.pub", 
+  "image_path": "/subscriptions/378d26f5-78cf-478d-adf1-86418712100b/resourceGroups/sgx3_group/providers/Microsoft.Compute/galleries/images/images/dumbo_2", 
+  "instance_types": {
+    "balancer": "Standard_DC4s_v2", 
+    "client": "Standard_DC1s_v2", 
+    "suboram": "Standard_DC4s_v2"
+  }, 
+  "local_project_dir": "/home/ec2-user/dorydb/experiments", 
+  "local_src_dir": "/home/ec2-user", 
+  "location": "eastus", 
+  "log_folder": "log", 
+  "malicious": true, 
+  "nbclients": [
+    1
+  ], 
+  "nbconds": [
+    5
+  ], 
+  "nbnumbuckets": [
+    8
+  ], 
+  "nbrepetitions": 1, 
+  "nbwindowsz": [
+    4, 
+    6, 
+    8, 
+    10, 
+    12, 
+    14, 
+    16
+  ], 
+  "num_appends": 9, 
+  "num_searches": 1, 
+  "query_type": "range-throughput", 
+  "remote_project_dir": "/home/ec2-user/dorydb/experiments", 
+  "replication_factor": 1, 
+  "reps": 1000, 
+  "run_name": "range_malicious_throughput", 
+  "seconds": 60, 
+  "server_ips": [
+    "18.218.5.108", 
+    "18.219.207.221", 
+    "3.133.34.108"
+  ], 
+  "ssh_key_file": "~/.ssh/dory.pem", 
+  "ssh_key_pub": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCkRPpE2bKwHmOW/gsG1mOHcz8T7JdGlIjz3YU7/RW8sRFaikUiA240Z+1SIsw+QbHFAbyhy9+OLOLQRN8CF9/cS+DU3BKXECGJP1dkiSPVs9tk9+Gfx2TILdHnY3tD0ylFKQYftNgin6OABUsTS//DFjEYbmGSDU+DGIvWSOirByWq0sQChX/SOueFAHWE2iO+ohINoZnFwAhYmwpV2feb7J3dK6DWVyne0JpNplodvhOaFA3hCRUnrJeAPb+WUrCsTdProkMLZOV1dpqq2N++VUWv690VUxZ+gzqGo7JkG2Vh02DuQlCarQ5AmY9o6Ws4O7fUS/CJ08hPISMy6brX", 
+  "username": "ec2-user"
+}

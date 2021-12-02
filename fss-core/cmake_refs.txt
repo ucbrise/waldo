@@ -1,0 +1,14 @@
+https://cmake.org/cmake/help/latest/command/install.html#install-targets
+https://cmake.org/cmake/help/latest/command/add_dependencies.html#command:add_dependencies
+https://cmake.org/pipermail/cmake/2016-June/063773.html
+https://stackoverflow.com/questions/46861504/cmake-transitive-dependency-is-not-found-via-find-package
+https://cmake.org/cmake/help/latest/command/export.html
+https://stackoverflow.com/questions/31512485/cmake-how-to-set-up-source-library-and-cmakelists-txt-dependencies
+https://stackoverflow.com/questions/59649679/cmake-propagate-dependencies-using-find-package
+https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html
+https://cmake.org/cmake/help/latest/manual/cmake-buildsystem.7.html#interface-libraries
+https://github.com/forexample/package-example
+https://cmake.org/cmake/help/v3.0/variable/CMAKE_INSTALL_PREFIX.html
+https://cmake.org/pipermail/cmake/2013-April/054247.html
+https://github.com/arvidn/libtorrent/issues/3101
+https://stackoverflow.com/questions/31259861/multiple-cmake-prefix-paths/31261919

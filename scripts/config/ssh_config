@@ -1,0 +1,4 @@
+Host github.com
+  Hostname github.com
+  IdentityFile=/home/azureuser/dorydb/id_ed25519
+  StrictHostKeyChecking no

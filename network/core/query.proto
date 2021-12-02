@@ -1,0 +1,220 @@
+syntax = "proto3";
+
+option java_package = "ex.grpc";
+
+package dbquery;
+
+// Defines the service
+service Query {
+    // Function invoked to send the request
+    rpc SendDCFInit (InitDCFRequest) returns (InitDCFResponse) {}
+    rpc SendDPFInit (InitDPFRequest) returns (InitDPFResponse) {}
+    rpc SendATInit (InitATRequest) returns (InitATResponse) {}
+    rpc SendListInit (InitListRequest) returns (InitListResponse) {}
+    rpc SendDCFUpdate (UpdateDCFRequest) returns (UpdateDCFResponse) {}
+    rpc SendDCFBatchedUpdate (BatchedUpdateDCFRequest) returns (BatchedUpdateDCFResponse) {}
+    rpc SendDPFUpdate (UpdateDPFRequest) returns (UpdateDPFResponse) {}
+    rpc SendDPFBatchedUpdate (BatchedUpdateDPFRequest) returns (BatchedUpdateDPFResponse) {}
+    rpc SendListUpdate (UpdateListRequest) returns (UpdateListResponse) {}
+    rpc SendListBatchedUpdate (BatchedUpdateListRequest) returns (BatchedUpdateListResponse) {}
+    rpc SendATAppend1 (AppendAT1Request) returns (AppendAT1Response) {}
+    rpc SendATAppend2 (AppendAT2Request) returns (AppendAT2Response) {}
+    rpc SendDCFQuery (QueryDCFRequest) returns (QueryDCFResponse) {}
+    rpc SendATQuery (QueryATRequest) returns (QueryATResponse) {}
+    rpc SendAggQuery (QueryAggRequest) returns (QueryAggResponse) {}
+}
+
+service Aggregate {
+    rpc SendMult (MultRequest) returns (MultResponse) {}
+    rpc SendSystemInit (InitSystemRequest) returns (InitSystemResponse) {}
+}
+
+message InitSystemRequest {
+    bytes key = 1;
+}
+
+message InitSystemResponse {
+    bytes result = 1;
+}
+
+message InitDCFRequest {
+    bytes id = 1;
+    uint32 window_size = 2;
+    uint32 num_buckets = 3;
+    bool malicious = 4;
+}
+
+message InitDCFResponse {
+    bytes result = 1;
+}
+
+message InitDPFRequest {
+    bytes id = 1;
+    uint32 window_size = 2;
+    uint32 num_buckets = 3;
+    bool malicious = 4;
+}
+
+message InitDPFResponse {
+    bytes result = 1;
+}
+
+message InitListRequest {
+    bytes id = 1;
+    uint32 window_size = 2;
+}
+
+message InitListResponse {
+    bytes result = 1;
+}
+
+message InitATRequest {
+    bytes id = 1;
+    uint32 agg_func = 2;
+    uint32 depth = 3;
+}
+
+message InitATResponse {
+    bytes result = 1;
+}
+
+message UpdateDCFRequest {
+    bytes id = 1;
+    uint32 val = 2;
+    bytes data0 = 3;
+    bytes data1 = 4;
+}
+
+message BatchedUpdateDCFRequest {
+    repeated UpdateDCFRequest updates = 1;
+}
+
+message UpdateDCFResponse {
+    bytes result = 1;
+}
+
+message BatchedUpdateDCFResponse {
+    bytes result = 1;
+}
+
+message UpdateDPFRequest {
+    bytes id = 1;
+    uint32 val = 2;
+    bytes data0 = 3;
+    bytes data1 = 4;
+}
+
+message BatchedUpdateDPFRequest {
+    repeated UpdateDPFRequest updates = 1;
+}
+
+message UpdateDPFResponse {
+    bytes result = 1;
+}
+
+message BatchedUpdateDPFResponse {
+    bytes result = 1;
+}
+
+message UpdateListRequest {
+    bytes id = 1;
+    uint32 val = 2;
+    bytes share0 = 3;
+    bytes share1 = 4;
+}
+
+message BatchedUpdateListRequest {
+    repeated UpdateListRequest updates = 1;
+}
+
+message UpdateListResponse {
+    bytes result = 1;
+}
+
+message BatchedUpdateListResponse {
+    bytes result = 1;
+}
+
+message AppendAT1Request {
+    bytes id = 1;
+    uint64 idx = 2;
+}
+
+message AppendAT1Response {
+    repeated bytes parent_shares = 1;
+}
+
+message AppendAT2Request {
+    bytes id = 1;
+    uint64 idx = 2;
+    repeated bytes new_shares0 = 3;
+    repeated bytes new_shares1 = 4;
+}
+
+message AppendAT2Response {
+    bytes result = 1;
+}
+
+message QueryDCFRequest {
+    bytes id = 1;
+    bytes key0 = 2;
+    bytes key1 = 3;
+}
+
+message QueryDCFResponse {
+    bytes res = 1;    // uint8_t
+}
+
+message QueryDPFRequest {
+    bytes key0 = 1;
+    bytes key1 = 2;
+}
+
+message QueryDPFResponse {
+    bytes res = 1;    // uint8_t
+}
+
+message QueryATRequest {
+    string id = 1;
+    bytes key0 = 2;
+    bytes key1 = 3;
+}
+
+message QueryATResponse {
+    bytes res = 1;
+    bytes mac = 2;
+    bytes res_r = 3;
+    bytes mac_r = 4;
+}
+
+message BaseFilter {
+    string id = 1;
+    bytes key0 = 2;
+    bytes key1 = 3;
+    bool is_point = 4;   // otherwise is range filter
+}
+
+message CombinedFilter {
+    repeated BaseFilter base_filters = 1;
+    bool op_is_and = 2;     // otherwise is OR operator
+}
+
+message QueryAggRequest {
+    string agg_id = 1;
+    CombinedFilter combined_filter = 2; 
+}
+
+message QueryAggResponse {
+    bytes res = 1;  // uint128_t
+    bytes mac = 2;
+    bytes lin_comb = 3;
+    bytes lin_comb_mac = 4;
+}
+
+message MultRequest {
+    bytes shares = 1;
+}
+
+message MultResponse {
+    bytes res = 1;
+}
