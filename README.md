@@ -53,3 +53,7 @@ The following unit tests can also be run locally after building:
 
 The rollup functionality sketched for the WaldoTree construction in the
 paper is not fully implemented.
+
+## Acknowledgements
+
+Thanks to Natacha Crooks and Vivian Fang for contributing to the framework used for the benchmarking in `scripts/`.
