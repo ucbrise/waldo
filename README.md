@@ -40,9 +40,9 @@ The output will be in `experiments/results` in the directory corresponding to th
 
 ## Testing locally
 
-To run the entire system locally, start server X as `./build/bin/query_server config/serverX.config`. Start the client with `./build/bin/bench config/client.config`. Alternatively, start the client with `./build/bin/correctness_tests` to run the correctness tests.
+To run the entire system locally, start server X as `./build/bin/query_server config/serverX.config`. Start the client with `./build/bin/bench config/client.config`. Alternatively, start the client with `./build/bin/correctness_tests` to run the correctness tests. Modify the parameters in the corresponding config files to run with different settings (e.g. number of cores, malicious security).
 
-The following unit tests can also be run locally after building:
+The following unit tests can also be run locally:
 ```
 ./build/bin/AggTreeUnitTest
 ./build/bin/DCFTableICUnitTest
