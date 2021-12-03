@@ -45,6 +45,5 @@ target_link_libraries(query_client
     DPFTable
     AggTree
     Common
-    BgiPirTests
     libOTe
     libPSI_Tests)

@@ -45,7 +45,6 @@ target_link_libraries(query_server
     DPFTable
     AggTree
     Common
-    BgiPirTests
     libOTe
     libPSI_Tests
     EMPNetIO)
