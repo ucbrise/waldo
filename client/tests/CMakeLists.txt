@@ -46,7 +46,6 @@ target_link_libraries(correctness_tests
     DPFTable
     AggTree
     Common
-    BgiPirTests
     libOTe
     libPSI_Tests)
 
@@ -58,6 +57,5 @@ target_link_libraries(bench
     DPFTable
     AggTree
     Common
-    BgiPirTests
     libOTe
     libPSI_Tests)

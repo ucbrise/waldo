@@ -12,7 +12,6 @@ foreach(_target
     DPFTable
     DCFTable
     Common
-    BgiPirTests
     libOTe
     libPSI_Tests
     )
