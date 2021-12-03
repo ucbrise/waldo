@@ -12,22 +12,27 @@ Install gRPC using the instructions [here](https://grpc.io/docs/languages/cpp/qu
 
 Download the Boost library.
 
-To run scripts, `cd scripts` and run `pip install -r requirements.txt`.
+To install the dependencies to run benchmarking scripts, `cd scripts` and run `pip install -r requirements.txt`.
 
 Note that the [libPSI](https://github.com/osu-crypto/libPSI) and [libOTe](https://github.com/osu-crypto/libOTe) libraries, which build on [cryptoTools](https://github.com/ladnir/cryptoTools/tree/master), are already included in `fss-core` and will build with the rest of the project.
 
 ## Building
 
-In the `network` directory, run `cmake .` and then `make` to generate the GRPC proto files.
-
-In the home directory, run `cmake .` and then `make`.
+Run
+```
+cd network
+cmake .
+make
+cd ..
+cmake .
+make
+```
 
 ## Running benchmarks
 
-Run `scripts/runExperiment.py` with the options for setup and/or running the experiment.
+Run `scripts/runExperiment.py` with the options for setup ('-s') and/or running the experiment ('-r').
 
 Set the experiment config file at the top of `runExperiment.py`, and make sure that the experiment config file has the right IP addresses.
-(using elastic IPs so this should be fine).
 
 After you've pulled and run `make` at the client and servers, run `python runExperiment.py` at the coordinator machine (machine running the experiments, not the client or servers).
 
