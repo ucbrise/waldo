@@ -184,11 +184,11 @@ void QueryServer::ValListUpdate(string id, uint32_t loc, uint128_t val0, uint128
     ValLists[id].second[loc] = val1;
 }
 
-uint128_t *QueryServer::AggTreeAppend1(string id, int *len) {
-    uint128_t *pathShares[2];
+uint128_t **QueryServer::AggTreeAppend1(string id, int *len) {
+    uint128_t **pathShares = (uint128_t **)malloc(2 * sizeof(uint128_t *));
     pathShares[0] = AggTrees[id].first->getAppendPath(len);
     pathShares[1] = AggTrees[id].second->getAppendPath(len);
-    return pathShares[0];
+    return pathShares;
 }
 
 void QueryServer::AggTreeAppend2(string id, uint32_t idx, uint128_t *new_shares0, uint128_t *new_shares1) {
@@ -783,9 +783,10 @@ class QueryServiceImpl final : public Query::Service {
         Status SendATAppend1(ServerContext *context, const AppendAT1Request *req, AppendAT1Response *resp) override {
             int len;
             printf("Processing AggTree append part 1\n");
-            uint128_t *parents = server.AggTreeAppend1(req->id(), &len);
+            uint128_t **parents = server.AggTreeAppend1(req->id(), &len);
             for (int i = 0; i < len; i++) {
-                resp->add_parent_shares((uint8_t *)&parents[i], sizeof(uint128_t));
+                resp->add_parent_shares0((uint8_t *)&parents[0][i], sizeof(uint128_t));
+                resp->add_parent_shares1((uint8_t *)&parents[1][i], sizeof(uint128_t));
             }
             free(parents);
             printf("Finished processing AggTree append part 1\n");

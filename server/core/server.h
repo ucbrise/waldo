@@ -58,7 +58,7 @@ class QueryServer {
         void DPFUpdate(string id, uint32_t loc, const uint128_t *data0, const uint128_t *data1);
         void DCFUpdate(string id, uint32_t loc, const uint128_t *data0, const uint128_t *data1);
         void ValListUpdate(string id, uint32_t loc, uint128_t val0, uint128_t val1);
-        uint128_t *AggTreeAppend1(string id, int *len);
+        uint128_t **AggTreeAppend1(string id, int *len);
         void AggTreeAppend2(string id, uint32_t idx, uint128_t *new_shares0, uint128_t *new_shares1);
         void DCFQuery(uint128_t **res0, uint128_t **res1, string id, const uint8_t *key0, const uint8_t *key1, uint32_t *len);
         void DCFQueryRSS(uint128_t **res0, uint128_t **res1, string id, const uint8_t *key0, const uint8_t *key1, uint32_t *len);

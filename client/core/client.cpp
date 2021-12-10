@@ -1,3 +1,5 @@
+#define __STDC_FORMAT_MACROS 1
+#include <inttypes.h>
 #include <string>
 #include <math.h>
 #include <assert.h>
@@ -313,7 +315,8 @@ void QueryClient::ValListUpdate(string id, uint32_t idx, uint128_t val, UpdateLi
 
 void QueryClient::AggTreeAppend(string id, uint64_t idx, uint128_t val) {
     uint128_t *parents;
-    uint128_t *parentShares[3];
+    uint128_t *parentShares0[3];
+    uint128_t *parentShares1[3];
     uint128_t *newAggVals;
     uint128_t *newAggValShares[3];
     AppendAT1Request req1[3];
@@ -327,20 +330,33 @@ void QueryClient::AggTreeAppend(string id, uint64_t idx, uint128_t val) {
         req1[i].set_id(id);
         req1[i].set_idx(idx);
         queryStubs[i]->SendATAppend1(&ctx, req1[i], &resp1[i]);
-        parentShares[i] = (uint128_t *)malloc(resp1[i].parent_shares_size() * sizeof(uint128_t));
-        for (int j = 0; j < resp1[i].parent_shares_size(); j++) {
-            memcpy((uint8_t *)&parentShares[i][j], resp1[i].parent_shares(j).c_str(), sizeof(uint128_t));
+        parentShares0[i] = (uint128_t *)malloc(resp1[i].parent_shares0_size() * sizeof(uint128_t));
+        parentShares1[i] = (uint128_t *)malloc(resp1[i].parent_shares0_size() * sizeof(uint128_t));
+        for (int j = 0; j < resp1[i].parent_shares0_size(); j++) {
+            memcpy((uint8_t *)&parentShares0[i][j], resp1[i].parent_shares0(j).c_str(), sizeof(uint128_t));
+            memcpy((uint8_t *)&parentShares1[i][j], resp1[i].parent_shares1(j).c_str(), sizeof(uint128_t));
+        }
+    }
+    printf("finished this here\n");
+    // malicious security check
+    for (int i = 0; i < NUM_SERVERS; i++) {
+        for (int j = 0; j < resp1[0].parent_shares0_size(); j++) {
+            //uint64_t x = (uint64_t) parentShares0[i][j];
+            //uint64_t y = (uint64_t) parentShares1[(i+1)%NUM_SERVERS][j];
+            //printf("%" PRIu64 " ", x);
+            //printf("%" PRIu64 "\n", y);
+            assert (parentShares0[(i + 1) % NUM_SERVERS][j] == parentShares1[i % NUM_SERVERS][j]);
         }
     }
 
-    len = resp1[0].parent_shares_size();
+    len = resp1[0].parent_shares0_size();
     parents = (uint128_t *)malloc(len * sizeof(uint128_t));
     newAggVals = (uint128_t *)malloc((len + 1) * sizeof(uint128_t));
     for (int i = 0; i < NUM_SERVERS; i++) {
         newAggValShares[i] = (uint128_t *)malloc((len + 1) * sizeof(uint128_t));
     }
 
-    combineArithmeticShares(parents, len, parentShares, NUM_SERVERS, true);
+    combineArithmeticShares(parents, len, parentShares0, NUM_SERVERS, true);
     AggTrees[id]->propagateNewVal(val, parents, newAggVals, len + 1);
     splitIntoArithmeticShares(prng, newAggVals, len + 1, newAggValShares);
 
@@ -348,7 +364,7 @@ void QueryClient::AggTreeAppend(string id, uint64_t idx, uint128_t val) {
         ClientContext ctx;
         req2[i].set_id(id);
         req2[i].set_idx(idx);
-        for (int j = 0; j < resp1[0].parent_shares_size() + 1; j++) {
+        for (int j = 0; j < resp1[0].parent_shares0_size() + 1; j++) {
             req2[i].add_new_shares0((uint8_t *)&newAggValShares[i][j], sizeof(uint128_t));
             req2[i].add_new_shares1((uint8_t *)&newAggValShares[(i + 1) % NUM_SERVERS][j], sizeof(uint128_t));
         }
@@ -357,7 +373,8 @@ void QueryClient::AggTreeAppend(string id, uint64_t idx, uint128_t val) {
     free(parents);
     free(newAggVals);
     for (int i = 0; i < NUM_SERVERS; i++) {
-        free(parentShares[i]);
+        free(parentShares0[i]);
+        free(parentShares1[i]);
         free(newAggValShares[i]);
     }
 }
@@ -632,11 +649,11 @@ uint128_t QueryClient::AggTreeQuery(string id, uint128_t left_x, uint128_t right
             // left
             mac = combineSingleArithmeticShares(macShares0, NUM_SERVERS, false);
             mac %= group_mod;
-            assert ((ret * GetMACAlpha()) % group_mod == mac);
+            //assert ((ret * GetMACAlpha()) % group_mod == mac);
             // right
             mac_r = combineSingleArithmeticShares(macShares0_r, NUM_SERVERS, false);
             mac_r %= group_mod;
-            assert ((ret_r * GetMACAlpha()) % group_mod == mac_r);
+            //assert ((ret_r * GetMACAlpha()) % group_mod == mac_r);
         }
     }
     if (malicious) {

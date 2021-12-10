@@ -141,7 +141,8 @@ message AppendAT1Request {
 }
 
 message AppendAT1Response {
-    repeated bytes parent_shares = 1;
+    repeated bytes parent_shares0 = 1;
+    repeated bytes parent_shares1 = 2;
 }
 
 message AppendAT2Request {
