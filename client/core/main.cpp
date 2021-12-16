@@ -52,8 +52,10 @@ int main(int argc, char *argv[]) {
 
     client->AddAggTree(table_id_at, sum, depth, aggTreeData);
     printf("Created Aggregate tree\n");
-    uint128_t agg = client->AggTreeQuery(table_id_at, 3, 100);
-    cout << "Aggregate is " << agg << endl;
+    uint128_t *ret;
+    uint128_t *ret_r;
+    client->AggTreeQuery(table_id_at, 3, 100, &ret, &ret_r);
+    cout << "Done with aggregate query "<< endl;
 
 }
 

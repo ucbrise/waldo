@@ -105,6 +105,7 @@ void splitIntoArithmeticShares(PRNG *prng, uint128_t *vals, int len, uint128_t *
         //valShares[1][i] = 0;
         valShares[1][i] = randFieldElem(prng);
         valShares[2][i] = vals[i] - (valShares[0][i] + valShares[1][i]);
+        //valShares[2][i] = vals[i];
     }
 
 }
@@ -115,7 +116,7 @@ void splitIntoSingleArithmeticShares(PRNG *prng, uint128_t val, uint128_t valSha
     //valShares[1] = 0;
     valShares[1] = randFieldElem(prng);
     valShares[2] = val - (valShares[0] + valShares[1]);
-
+    //valShares[2] = val;
 }
 
 // TODO: rejection sampling if don't end up using power of 2 rings

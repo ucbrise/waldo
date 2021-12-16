@@ -60,7 +60,7 @@ public:
     void AggTreeAppend(string id, uint64_t idx, uint128_t val);
 
     uint128_t *DCFQuery(string id, uint32_t left_x, uint32_t right_x, size_t ret_len);
-    uint128_t AggTreeQuery(string id, uint128_t left_x, uint128_t right_x);
+    void AggTreeQuery(string id, uint128_t left_x, uint128_t right_x, uint128_t **ret, uint128_t **ret_r);
 
     uint128_t AggQuery(string agg_id, QueryObj &query);
     void GenerateCombinedFilter(Expression *expr, CombinedFilter *filters[]);

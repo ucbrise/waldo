@@ -127,7 +127,7 @@ void QueryServer::StartSystemInit(string addrs[]) {
 
 void QueryServer::FinishSystemInit(const uint8_t *key) {
     memcpy((uint8_t *)&prfKey1, key, sizeof(uint128_t));
-    cout << "finished system init" << endl;
+    cout << "----- DONE WITH SETUP ------" << endl;
 }
 
 void QueryServer::AddValList(string id, uint32_t windowSize) {
@@ -388,26 +388,44 @@ void QueryServer::AggTreeQuery(string id, const uint8_t *key0, const uint8_t *ke
     AggTrees[id].first->eval_agg_tree(res1, res_child1, gout_bitsize, true, group_mod, true);
     AggTrees[id].second->eval_agg_tree(res2, res_child2, gout_bitsize, true, group_mod, true);
 
-    uint128_t* res1_r = res1 + mac_factor*(depth+1);
-    uint128_t* res2_r = res2 + mac_factor*(depth+1);
-    uint128_t* res_child1_r = res_child1 + mac_factor*(depth+1);
-    uint128_t* res_child2_r = res_child2 + mac_factor*(depth+1);
+    uint128_t* res1_r = res1 + mac_factor*(depth + 1);
+    uint128_t* res2_r = res2 + mac_factor*(depth + 1);
+    uint128_t* res_child1_r = res_child1 + mac_factor*(depth + 1);
+    uint128_t* res_child2_r = res_child2 + mac_factor*(depth + 1);
+    res1[0] += res2[0];
+    res1_r[0] += res2_r[0];
+    if (malicious) {
+        res1[depth] += res2[depth];
+        res1_r[depth] += res2_r[depth];
+    }
     for (int d = 1; d < depth; d++) {
+ 
         res1[d] -= res_child1[d-1];
         res2[d] -= res_child2[d-1];
         res1_r[d] -= res_child1_r[d-1];
         res2_r[d] -= res_child2_r[d-1];
+
+        res1[d] += res2[d];
+        res1_r[d] += res2_r[d];
+
         if (malicious) {
             res1[d + depth] -= res_child1[d - 1 + depth];
             res2[d + depth] -= res_child2[d - 1 + depth];
             res1_r[d + depth] -= res_child1_r[d - 1 + depth];
             res2_r[d + depth] -= res_child2_r[d - 1 + depth];
+
+            res1[d + depth] += res2[d + depth];
+            res1_r[d + depth] += res2_r[d + depth];
         }
     }
-    ret = res1;
+    memcpy(ret, res1, ((depth) * sizeof(uint128_t)));
+    memcpy(ret_r, res1_r, ((depth) * sizeof(uint128_t)));
+    memcpy(mac, ((uint8_t *)res1) + ((depth) * sizeof(uint128_t)), ((depth) * sizeof(uint128_t)));
+    memcpy(mac_r, ((uint8_t *)res1_r) + ((depth) * sizeof(uint128_t)), ((depth) * sizeof(uint128_t)));
+    /*ret = res1;
     ret_r = res1_r;
     mac = res1 + depth;
-    mac_r = res1_r + depth;
+    mac_r = res1_r + depth;*/
 }
 
 void QueryServer::AndFilters(uint128_t *shares_out0, uint128_t *shares_out1, uint128_t *shares_x0, uint128_t *shares_x1, uint128_t *shares_y0, uint128_t *shares_y1, uint128_t *zero_shares, uint128_t* coeff0, uint128_t* coeff1, int len, uint128_t* lin_comb_acc, uint128_t* lin_comb_mac_acc) {
@@ -845,16 +863,17 @@ class QueryServiceImpl final : public Query::Service {
 
         Status SendATQuery(ServerContext *context, const QueryATRequest *req, QueryATResponse *resp) override {
             printf("Received AggTree query\n");
-            int depth = 40;
+            //int depth = server.AggTrees.first[req->id()]->depth;
+            int depth = 8;
             uint128_t* res = (uint128_t*)malloc((depth+1)*sizeof(uint128_t));
             uint128_t* mac = (uint128_t*)malloc((depth+1)*sizeof(uint128_t));
             uint128_t* res_r = (uint128_t*)malloc((depth+1)*sizeof(uint128_t));
             uint128_t* mac_r = (uint128_t*)malloc((depth+1)*sizeof(uint128_t));
             server.AggTreeQuery(req->id(), (const uint8_t *)req->key0().c_str(), (const uint8_t *)req->key1().c_str(), res, mac, res_r, mac_r, &depth);
-            resp->set_res((uint8_t *)res, (depth+1)*sizeof(uint128_t));
-            resp->set_mac((uint8_t *)mac, (depth+1)*sizeof(uint128_t));
-            resp->set_res_r((uint8_t *)res_r, (depth+1)*sizeof(uint128_t));
-            resp->set_mac_r((uint8_t *)mac_r, (depth+1)*sizeof(uint128_t));
+            resp->set_res((uint8_t *)res, (depth)*sizeof(uint128_t));
+            resp->set_mac((uint8_t *)mac, (depth)*sizeof(uint128_t));
+            resp->set_res_r((uint8_t *)res_r, (depth)*sizeof(uint128_t));
+            resp->set_mac_r((uint8_t *)mac_r, (depth)*sizeof(uint128_t));
             printf("Finished processing AggTree query\n");
             return Status::OK;
         }

@@ -267,6 +267,14 @@ int main(int argc, char** argv){
     sv2->add_keys(AGG_Tree, svk2_l);
     sv1->add_keys(AGG_Tree, svk1_r);
     sv2->add_keys(AGG_Tree, svk2_r);
+
+/*    uint8_t *key0;
+    uint8_t *key1;
+    size_t sz;
+    cl->agg_tree_oracle->serialize_keys(&key0, &key1, &sz);
+    sv1->agg_tree_oracle->deserialize_key(key0, true);
+    sv2->agg_tree_oracle->deserialize_key(key1, false);*/
+
     cout<<"Keys transferred to servers"<<endl;
     
     cout<<"Servers running aggregate tree evaluation..."<<endl;

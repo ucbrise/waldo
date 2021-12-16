@@ -93,8 +93,10 @@ bool dcfAggTest(QueryClient *client, int numConds) {
 bool aggTreeTest(QueryClient *client) {
     map<uint64_t, uint128_t> aggTreeData;
     int depth = 8;
-    int left_x = 11;
-    int right_x = 6;
+    int left_x = 8;
+    //int left_x = 8;
+    int right_x = 8;
+    //int right_x = 2;
     string table_id = "test_aggtree";
     for (uint64_t i = 1; i < (1 << (depth - 1)); i++) {
         uint128_t one = 1;
@@ -103,21 +105,18 @@ bool aggTreeTest(QueryClient *client) {
 
     client->AddAggTree(table_id, sum, depth, aggTreeData);
     cout << "Created aggregate tree\n" << endl;
-    uint128_t agg = client->AggTreeQuery(table_id, left_x, right_x);
-    if (agg == (left_x - right_x - 1)) {
-        cout << GREEN << "Returned correct aggregate tree result " << agg << RESET << endl;
-        return true;
-    }
-    cout << RED << "ERROR: Returned wrong aggregate tree result " << agg << ", should have returned " << (left_x - right_x - 1) << RESET << endl;
-    return false;
+    uint128_t *ret;
+    uint128_t *ret_r;
+    client->AggTreeQuery(table_id, left_x, right_x, &ret, &ret_r);
+    return true;
 }
 
 bool dcfTableTest(QueryClient *client) {
     uint32_t windowSize = 256;
     uint32_t numBuckets = 256;
     string table_id = "test";
-    uint32_t left_x = 111;
-    uint32_t right_x = 61;
+    uint32_t left_x = 11;
+    uint32_t right_x = 6;
     vector<uint32_t> data(windowSize, 1);
     for (int i = 0; i < windowSize; i++) {
         data.push_back(rand() % numBuckets);

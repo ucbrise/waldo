@@ -337,14 +337,9 @@ void QueryClient::AggTreeAppend(string id, uint64_t idx, uint128_t val) {
             memcpy((uint8_t *)&parentShares1[i][j], resp1[i].parent_shares1(j).c_str(), sizeof(uint128_t));
         }
     }
-    printf("finished this here\n");
     // malicious security check
     for (int i = 0; i < NUM_SERVERS; i++) {
         for (int j = 0; j < resp1[0].parent_shares0_size(); j++) {
-            //uint64_t x = (uint64_t) parentShares0[i][j];
-            //uint64_t y = (uint64_t) parentShares1[(i+1)%NUM_SERVERS][j];
-            //printf("%" PRIu64 " ", x);
-            //printf("%" PRIu64 "\n", y);
             assert (parentShares0[(i + 1) % NUM_SERVERS][j] == parentShares1[i % NUM_SERVERS][j]);
         }
     }
@@ -570,15 +565,15 @@ uint128_t *QueryClient::DCFQuery(string id, uint32_t left_x, uint32_t right_x, s
     return ret;
 }
 
-uint128_t QueryClient::AggTreeQuery(string id, uint128_t left_x, uint128_t right_x) {
+void QueryClient::AggTreeQuery(string id, uint128_t left_x, uint128_t right_x, uint128_t **ret, uint128_t **ret_r) {
     uint8_t *k[NUM_SERVERS][2];
     size_t key_len;
     uint64_t gout_bitsize = 125;
     uint128_t one = 1;
     uint128_t group_mod = (one << gout_bitsize);
-    uint128_t ret;
+    *ret = (uint128_t *)malloc(AggTrees[id]->depth * sizeof(uint128_t));
+    *ret_r = (uint128_t *)malloc(AggTrees[id]->depth * sizeof(uint128_t));
     uint128_t mac;
-    uint128_t ret_r;
     uint128_t mac_r;
     uint128_t retShares0[NUM_SERVERS];
     uint128_t macShares0[NUM_SERVERS];
@@ -618,50 +613,51 @@ uint128_t QueryClient::AggTreeQuery(string id, uint128_t left_x, uint128_t right
         cq[i].Next(&got_tag, &ok);
         if (ok && got_tag == (void *)1) {
             if (status[i].ok()) {
-                memcpy((uint128_t *)&retShares[i], (const uint8_t *)resps[i].res().c_str(), (AggTrees[id]->depth+1) * sizeof(uint128_t));
+                memcpy((uint8_t *)&retShares[i], (const uint8_t *)resps[i].res().c_str(), (AggTrees[id]->depth) * sizeof(uint128_t));
                 if (malicious) {
-                    memcpy((uint128_t *)&macShares[i], (const uint8_t *)resps[i].mac().c_str(), (AggTrees[id]->depth + 1) * sizeof(uint128_t));
+                    memcpy((uint8_t *)&macShares[i], (const uint8_t *)resps[i].mac().c_str(), (AggTrees[id]->depth) * sizeof(uint128_t));
                 }
-                memcpy((uint128_t *)&retShares_r[i], (const uint8_t *)resps[i].res_r().c_str(), (AggTrees[id]->depth+1) * sizeof(uint128_t));
+                memcpy((uint8_t *)&retShares_r[i], (const uint8_t *)resps[i].res_r().c_str(), (AggTrees[id]->depth) * sizeof(uint128_t));
                 if (malicious) {
-                    memcpy((uint128_t *)&macShares_r[i], (const uint8_t *)resps[i].mac_r().c_str(), (AggTrees[id]->depth + 1) * sizeof(uint128_t));
+                    memcpy((uint8_t *)&macShares_r[i], (const uint8_t *)resps[i].mac_r().c_str(), (AggTrees[id]->depth) * sizeof(uint128_t));
                 }
             } else {
                 printf("ERROR receiving message: %s\n", status[i].error_message().c_str());
             }
         }
     }
-    // simulating some computation here
-    for (int i = 0; i < NUM_SERVERS; i++) {
-        retShares0[i] = retShares[i][0];
-        macShares0[i] = macShares[i][0];
-        retShares0_r[i] = retShares_r[i][0];
-        macShares0_r[i] = macShares_r[i][0];
-    }
-    for (int i = 0; i < AggTrees[id]->depth + 1; i++){
+    for (int i = 0; i < AggTrees[id]->depth; i++){
         // left
-        ret = combineSingleArithmeticShares(retShares0, NUM_SERVERS, false);
-        ret %= group_mod;
+        uint128_t shares[NUM_SERVERS];
+        uint128_t shares_r[NUM_SERVERS];
+        uint128_t macs[NUM_SERVERS];
+        uint128_t macs_r[NUM_SERVERS];
+        for (int j = 0; j < NUM_SERVERS; j++) {
+            shares[j] = retShares[j][i];
+            shares_r[j] = retShares_r[j][i];
+            macs[j] = macShares[j][i];
+            macs_r[j] = macShares_r[j][i];
+        }
+        (*ret)[i] = combineSingleArithmeticShares(shares, NUM_SERVERS, false);
+        (*ret)[i] %= group_mod;
         // right
-        ret_r = combineSingleArithmeticShares(retShares0_r, NUM_SERVERS, false);
-        ret_r %= group_mod;
+        (*ret_r)[i] = combineSingleArithmeticShares(shares_r, NUM_SERVERS, false);
+        (*ret_r)[i] %= group_mod;
         if (malicious) {
             // left
-            mac = combineSingleArithmeticShares(macShares0, NUM_SERVERS, false);
+            mac = combineSingleArithmeticShares(macs, NUM_SERVERS, false);
             mac %= group_mod;
-            //assert ((ret * GetMACAlpha()) % group_mod == mac);
+            assert (((*ret)[i] * GetMACAlpha()) % group_mod == mac);
             // right
-            mac_r = combineSingleArithmeticShares(macShares0_r, NUM_SERVERS, false);
+            mac_r = combineSingleArithmeticShares(macs_r, NUM_SERVERS, false);
             mac_r %= group_mod;
-            //assert ((ret_r * GetMACAlpha()) % group_mod == mac_r);
+            assert (((*ret_r)[i] * GetMACAlpha()) % group_mod == mac_r);
         }
     }
+    // TODO: assemble shares based on aggregation function
     if (malicious) {
         cout << "MAC check passed" << endl;
     }
-
-    return ret + ret_r;
-
 }
 
 uint128_t QueryClient::GetMACAlpha(){

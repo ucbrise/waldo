@@ -190,7 +190,9 @@ void aggTreeTest(QueryClient *client, int depth, int reps, vector <uint32_t> &ti
     for (int i = 0; i < reps; i++) {
         INIT_TIMER;
         START_TIMER;
-        uint128_t agg = client->AggTreeQuery(table_id, left_x, 1);
+        uint128_t *ret;
+        uint128_t *ret_r;
+        client->AggTreeQuery(table_id, left_x, 1, &ret, &ret_r);
         times.push_back(STOP_TIMER_());
     }
 }
@@ -210,7 +212,9 @@ void aggTreeThroughput(QueryClient *client, int depth, int reps, vector <uint32_
         for (int j = 0; j < numSearches && totalMs < seconds * 1000; j++) {
             INIT_TIMER;
             START_TIMER;
-            uint128_t agg = client->AggTreeQuery(table_id, left_x, 1);
+            uint128_t *ret;
+            uint128_t *ret_r;
+            client->AggTreeQuery(table_id, left_x, 1, &ret, &ret_r);
             uint32_t time = STOP_TIMER_();
             times.push_back(time);
             totalMs += time;

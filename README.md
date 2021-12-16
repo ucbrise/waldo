@@ -40,7 +40,9 @@ The output will be in `experiments/results` in the directory corresponding to th
 
 ## Testing locally
 
-To run the entire system locally, start server X as `./build/bin/query_server config/serverX.config`. Start the client with `./build/bin/bench config/client.config`. Alternatively, start the client with `./build/bin/correctness_tests` to run the correctness tests. Modify the parameters in the corresponding config files to run with different settings (e.g. number of cores, malicious security).
+To run the entire system locally, start server X as `./build/bin/query_server config/serverX.config`. Start the client with `./build/bin/bench config/client.config`.
+Alternatively, start the client with `./build/bin/correctness_tests` to run the correctness tests. Modify the parameters in the corresponding config files to run with different settings (e.g. number of cores, malicious security).
+Make sure to start the servers within 10 seconds of each other and wait until each has printed "DONE WITH SETUP" before starting the client (this means initialization has completed).
 
 The following unit tests can also be run locally:
 ```
@@ -57,7 +59,8 @@ The following unit tests can also be run locally:
 ## Limitations
 
 The rollup functionality sketched for the WaldoTree construction in the
-paper is not fully implemented.
+paper is not fully implemented. Also, the node values for WaldoTree are directly
+returned without aggregating by the user-defined aggregation function.
 
 ## Acknowledgements
 

@@ -61,8 +61,8 @@ namespace dorydb
 
     void AggTreeIndexClient::serialize_keys(uint8_t **key0, uint8_t **key1, size_t *key_size) {
         // Placing LT and GT key after one another. GT placed after LT.
-        *key0 = (uint8_t *)malloc(key[0]->get_keysize() + key[1]->get_keysize());
-        *key1 = (uint8_t *)malloc(key[0]->get_keysize() + key[1]->get_keysize());
+        *key0 = (uint8_t *)malloc((key[0]->get_keysize() + key[1]->get_keysize()));
+        *key1 = (uint8_t *)malloc((key[0]->get_keysize() + key[1]->get_keysize()));
         key[0]->dcf_serialize(depth, *key0, *key1);
         key[1]->dcf_serialize(depth, *key0 + key[0]->get_keysize(), *key1 + key[0]->get_keysize());
         *key_size = key[0]->get_keysize() + key[1]->get_keysize();
@@ -238,6 +238,7 @@ namespace dorydb
         }
 
         if(both){
+            //dcf_res_r = dcf_res;
             dcf_res_r = dcf_res + (mac_factor*size);
             res_r = res + (mac_factor*(depth+1)); 
             child_res_r = child_res + (mac_factor*(depth+1)); 
@@ -430,6 +431,7 @@ namespace dorydb
     void AggTreeIndexServer::deserialize_key(const uint8_t *key_bytes, bool isFirst) {
         svkey *k_l = new svkey();
         svkey *k_r = new svkey();
+        key.clear();
         // left key
         k_l->malicious = malicious;
         k_l->dcf_size = depth + 1;
