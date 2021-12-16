@@ -58,7 +58,7 @@ The following unit tests can also be run locally:
 
 ## Limitations
 
-The rollup functionality sketched for the WaldoTree construction in the
+The rollup functionality suggested as an extension for the WaldoTree construction in the
 paper is not fully implemented. Also, the node values for WaldoTree are directly
 returned without aggregating by the user-defined aggregation function.
 
