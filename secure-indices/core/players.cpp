@@ -10,13 +10,16 @@ namespace dorydb
         srand(time(NULL));
         this->seed = toBlock(rand(), rand());
         this->prng.SetSeed(seed);
+        agg_tree_oracle = NULL;
+        dpf_table_oracle = NULL;
+        dcf_table_oracle = NULL;
     }
 
     client::~client()
     {
-        delete agg_tree_oracle;
-        delete dpf_table_oracle;
-        delete dcf_table_oracle;
+        if (agg_tree_oracle != NULL) delete agg_tree_oracle;
+        if (dpf_table_oracle != NULL) delete dpf_table_oracle;
+        if (dcf_table_oracle != NULL) delete dcf_table_oracle;
     }
 
     server::server(int id)
