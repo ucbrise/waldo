@@ -11,7 +11,8 @@ set(CMAKE_PREFIX_PATH
     "${CMAKE_CURRENT_SOURCE_DIR}/fss-core/libOTe/build/lib/cmake;
     ${CMAKE_CURRENT_SOURCE_DIR}/fss-core/libPSI/build/lib/cmake")
 
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS thread system REQUIRED)
+find_package(OpenMP REQUIRED)
 find_package(libOTe  REQUIRED)
 find_package(libPSI REQUIRED)
 
@@ -25,8 +26,8 @@ if(DEBUG)
 endif()
 
 add_subdirectory(fss-core)
-add_subdirectory(network-emp)
-add_subdirectory(network)
+#add_subdirectory(network-emp)
+#add_subdirectory(network)
 add_subdirectory(secure-indices)
-add_subdirectory(client)
-add_subdirectory(server)
+#add_subdirectory(client)
+#add_subdirectory(server)

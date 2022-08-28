@@ -191,9 +191,9 @@ add_subdirectory(libOTe_Tests)
 add_subdirectory(frontend)
 
 ########### To include in external projects ########
-#export(TARGETS libOTe_Tests libOTe cryptoTools FILE libOTeConfig.cmake)
-#set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
-#export(PACKAGE libOTe)
+export(TARGETS libOTe_Tests libOTe cryptoTools FILE libOTeConfig.cmake)
+set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+export(PACKAGE libOTe)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})
 
