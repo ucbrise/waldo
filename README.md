@@ -15,6 +15,9 @@ Download the [Boost](https://www.boost.org/) library (tested on versions 1.74-1.
 To install the dependencies to run benchmarking scripts, `cd scripts` and run `pip install -r requirements.txt`.
 
 Note that the [libPSI](https://github.com/osu-crypto/libPSI) and [libOTe](https://github.com/osu-crypto/libOTe) libraries, which build on [cryptoTools](https://github.com/ladnir/cryptoTools/tree/master), are already included in `fss-core`.
+
+## Building
+
 Build libOTe 
 ```
 cd fss-core/libOTe
@@ -28,16 +31,16 @@ cmake . -DENABLE_RELIC=ON -DENABLE_DRRN_PSI=ON -DENABLE_KKRT_PSI=ON
 make -j
 ```
 
-Copy the generated files `waldo/fss-core/libOTe/libOTe_Tests/libOTeConfig.cmake` and `waldo/fss-core/libPSI/libPSI_Tests/libPSIConfig.cmake` into `waldo/fss-core/cmake`.
-
-## Building
-
-Run
+Build networking code
 ```
 cd network
 cmake .
 make
 cd ..
+```
+
+Build Waldo
+```
 cmake .
 make
 ```
