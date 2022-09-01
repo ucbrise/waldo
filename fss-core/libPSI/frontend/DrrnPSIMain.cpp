@@ -64,7 +64,7 @@ void Drrn17Send(
                         srv.setInputs(set, params.mNumHash, 10);
                         auto e = tt.setTimePoint("e");
 
-                        std::this_thread::sleep_for(std::chrono::seconds(1));
+                        // std::this_thread::sleep_for(std::chrono::seconds(1));
 
                         if (params.mCmd->isSet("cuckooTime") && params.mIdx == 1)
                             std::cout << "ch:" << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << "ms " << std::flush;

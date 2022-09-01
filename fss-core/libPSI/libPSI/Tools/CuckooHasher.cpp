@@ -142,7 +142,7 @@ namespace osuCrypto
         else
         {
             std::cout << "Failed to find cuckoo parameters large enough  "<< n << " " << std::log2(n) << "\n" LOCATION << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            // std::this_thread::sleep_for(std::chrono::seconds(1));
             throw std::runtime_error("not implemented " LOCATION);
         }
 
