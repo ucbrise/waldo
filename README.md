@@ -10,7 +10,7 @@ This prototype is released under the Apache v2 license (see [License](#license))
 
 Install gRPC (tested on v1.48.1) using the instructions [here](https://grpc.io/docs/languages/cpp/quickstart/).
 
-Download the [Boost](https://www.boost.org/) library (tested on versions 1.74-1.76; can be installed on Ubuntu with `sudo apt install libboost-all-dev`) and [Relic](https://github.com/relic-toolkit/relic).
+Download the [Boost](https://www.boost.org/) library (tested on versions 1.74-1.76; can be installed on Ubuntu with `sudo apt install libboost-all-dev`) and [Relic](https://github.com/relic-toolkit/relic) (tested on version 0.6.0; no presets needed while building Relic; use `-DMULTI=OPENMP` flag with `cmake` when building Relic).
 
 To install the dependencies to run benchmarking scripts, `cd scripts` and run `pip install -r requirements.txt`.
 
