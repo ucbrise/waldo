@@ -8,8 +8,8 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_PREFIX_PATH 
-    "${CMAKE_CURRENT_SOURCE_DIR}/fss-core/libOTe/build/lib/cmake;
-    ${CMAKE_CURRENT_SOURCE_DIR}/fss-core/libPSI/build/lib/cmake")
+    "${CMAKE_CURRENT_SOURCE_DIR}/fss-core/libOTe;
+    ${CMAKE_CURRENT_SOURCE_DIR}/fss-core/libPSI")
 
 find_package(Boost COMPONENTS thread system REQUIRED)
 find_package(OpenMP REQUIRED)
