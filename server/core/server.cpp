@@ -863,8 +863,7 @@ class QueryServiceImpl final : public Query::Service {
 
         Status SendATQuery(ServerContext *context, const QueryATRequest *req, QueryATResponse *resp) override {
             printf("Received AggTree query\n");
-            //int depth = server.AggTrees.first[req->id()]->depth;
-            int depth = 8;
+            int depth = server.AggTrees[req->id()].first->depth;
             uint128_t* res = (uint128_t*)malloc((depth+1)*sizeof(uint128_t));
             uint128_t* mac = (uint128_t*)malloc((depth+1)*sizeof(uint128_t));
             uint128_t* res_r = (uint128_t*)malloc((depth+1)*sizeof(uint128_t));
