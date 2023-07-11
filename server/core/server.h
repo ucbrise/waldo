@@ -85,6 +85,7 @@ class QueryServer {
         ServerCompletionQueue *cq;
         bool malicious;
         int cores;
+        map<string, pair<AggTreeIndexServer*, AggTreeIndexServer*>> AggTrees;
 
     private:
         uint128_t prfKey0;
@@ -93,7 +94,6 @@ class QueryServer {
         map<string, pair<DPFTableServer*, DPFTableServer*>> DPFTables;
         map<string, pair<DCFTableServer*, DCFTableServer*>> DCFTables;
         map<string, pair<vector<uint128_t>, vector<uint128_t>>> ValLists;
-        map<string, pair<AggTreeIndexServer*, AggTreeIndexServer*>> AggTrees;
         map<string, int> DPFTableWindowPtrs;
         map<string, int> DCFTableWindowPtrs;
         map<string, int> ValListWindowPtrs;
