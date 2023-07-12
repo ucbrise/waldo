@@ -18,7 +18,7 @@ from graph_util import *
 clientPrefix = "client-"
 serverPrefix = "server-"
 
-PROPERTY_FILE = "config/tree_malicious_throughput.json"
+PROPERTY_FILE = "config/tree_malicious.json"
 CLIENT_CONFIG_FILE = "config/client.config"
 SERVER_CONFIG_FILE = "config/server.config"
 SSH_CONFIG_FILE = "config/ssh_config"
